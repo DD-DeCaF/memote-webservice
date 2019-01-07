@@ -15,6 +15,7 @@
 
 """Define individual jobs."""
 
+import cobra
 import memote
 
 from .celery import celery_app
@@ -23,6 +24,8 @@ from .celery import celery_app
 @celery_app.task
 def model_snapshot(model):
     """Run memote on the given model and create a snapshot report."""
+    configuration = cobra.Configuration()
+    configuration.processes = 1
     _, result = memote.test_model(model, results=True,
                                   pytest_args=["-vv", "--tb", "long"])
     config = memote.ReportConfiguration.load()

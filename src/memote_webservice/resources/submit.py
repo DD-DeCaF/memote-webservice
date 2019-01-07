@@ -123,7 +123,7 @@ class Submit(MethodResource):
 
     @staticmethod
     def _dump_model(filename, content):
-        unqiue_filename = f"{str(uuid4())}_{werkzeug.secure_filename(filename)}"
-        LOGGER.warning(f"Dumping uploaded model to '{unqiue_filename}'")
-        with open(unqiue_filename, 'wb') as file_:
+        unique_filename = f"{str(uuid4())}_{werkzeug.secure_filename(filename)}"
+        LOGGER.warning(f"Dumping uploaded model to '{unique_filename}'")
+        with open(unique_filename, 'wb') as file_:
             file_.write(content.getvalue())
