@@ -27,6 +27,8 @@ from flask import jsonify
 from werkzeug.exceptions import HTTPException
 from werkzeug.routing import RoutingException
 
+from memote_webservice.exceptions import SBMLValidationError
+
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +36,7 @@ logger = logging.getLogger(__name__)
 def init_app(app):
     app.register_error_handler(422, handle_webargs_error)
     app.register_error_handler(HTTPException, handle_http_error)
+    app.register_error_handler(SBMLValidationError, handle_sbml_error)
     app.register_error_handler(Exception, handle_uncaught_error)
 
 
@@ -67,6 +70,17 @@ def handle_http_error(error):
         response = jsonify({'message': error.description})
         response.status_code = error.code
         return response
+
+
+def handle_sbml_error(error):
+    """Handle SBMLValidationError."""
+    response = jsonify({
+        'code': 'sbml_validation_failure',
+        'warnings': error.warnings,
+        'errors': error.errors,
+    })
+    response.status_code = error.code
+    return response
 
 
 def handle_uncaught_error(error):
