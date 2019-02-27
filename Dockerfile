@@ -30,7 +30,7 @@ RUN set -eux \
     && apt-get update \
     && apt-get install --yes --only-upgrade openssl ca-certificates \
     && apt-get install --yes --no-install-recommends \
-        g++ \
+        g++ libssl-dev \
     && pip install --upgrade pip==9.0.3 setuptools wheel \
     && pip install -r requirements.in -r dev-requirements.in \
     && rm -rf /root/.cache/pip \
