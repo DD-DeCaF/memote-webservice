@@ -17,9 +17,9 @@
 
 from flask_apispec.extension import FlaskApiSpec
 
-from memote_webservice.resources.submit import Submit
-from memote_webservice.resources.status import Status
 from memote_webservice.resources.report import Report
+from memote_webservice.resources.status import Status
+from memote_webservice.resources.submit import Submit
 
 
 def init_app(app):
