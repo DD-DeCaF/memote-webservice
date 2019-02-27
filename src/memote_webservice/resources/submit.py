@@ -15,19 +15,22 @@
 
 """Provide a resource to submit models for testing."""
 
+import tempfile
 from bz2 import BZ2File
 from gzip import GzipFile
 from io import BytesIO
 from itertools import chain
 from uuid import uuid4
 
+import memote
 import structlog
 import werkzeug
-from cobra.io import load_json_model, read_sbml_model
+from cobra.io import load_json_model
 from cobra.io.sbml3 import CobraSBMLError
 from flask import abort
 from flask_apispec import MethodResource, doc, marshal_with, use_kwargs
 
+from memote_webservice.exceptions import SBMLValidationError
 from memote_webservice.schemas import SubmitRequest, SubmitResponse
 from memote_webservice.tasks import model_snapshot
 
@@ -76,12 +79,26 @@ class Submit(MethodResource):
         try:
             if file_storage.mimetype in self.JSON_TYPES or \
                     filename.endswith("json"):
-                LOGGER.debug("Loading model from JSON.")
+                LOGGER.debug("Loading model from JSON using cobrapy.")
                 model = load_json_model(content)
             elif file_storage.mimetype in self.XML_TYPES or \
                     filename.endswith("xml") or filename.endswith("sbml"):
-                LOGGER.debug("Loading model from SBML.")
-                model = read_sbml_model(content)
+                LOGGER.debug("Loading model from SBML using memote.")
+                # Memote accepts only a file path, so write to a temporary file.
+                with tempfile.NamedTemporaryFile() as file_:
+                    file_.write(content.getvalue())
+                    file_.seek(0)
+                    model, sbml_ver, notifications = memote.validate_model(
+                        file_.name,
+                    )
+                if model is None:
+                    self._dump_model(filename, content)
+                    LOGGER.info("SBML validation failure")
+                    raise SBMLValidationError(
+                        code=400,
+                        warnings=notifications['warnings'],
+                        errors=notifications['errors'],
+                    )
             else:
                 mime_types = ', '.join((chain(self.JSON_TYPES, self.XML_TYPES)))
                 msg = (
