@@ -84,7 +84,7 @@ spec:
             secretKeyRef:
               name: memote-webservice
               key: FLOWER_PASSWORD
-        command: ["celery", "flower", "-A", "memote_webservice", "--broker=redis://localhost:6379/0", "--url_prefix=/memote", "--basic_auth=$(FLOWER_USERNAME):$(FLOWER_PASSWORD)"]
+        command: ["celery", "flower", "-A", "memote_webservice", "--broker=redis://localhost:6379/0", "--basic_auth=$(FLOWER_USERNAME):$(FLOWER_PASSWORD)"]
         resources:
           requests:
             cpu: "10m"

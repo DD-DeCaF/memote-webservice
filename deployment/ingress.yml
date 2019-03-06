@@ -29,17 +29,16 @@ metadata:
   name: memote-webservice-flower-production
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   tls:
   - hosts:
     - flower.dd-decaf.eu
     secretName: decaf-tls
   rules:
-  - host: flower.dd-decaf.eu
+  - host: flower-memote.dd-decaf.eu
     http:
       paths:
-      - path: /memote
+      - path: /
         backend:
           serviceName: memote-webservice-production
           servicePort: 5555
