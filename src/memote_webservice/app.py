@@ -22,10 +22,9 @@ import os
 import structlog
 from flask import Flask
 from flask_cors import CORS
+from pythonjsonlogger import jsonlogger
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
-
-from pythonjsonlogger import jsonlogger
 
 from . import errorhandlers
 

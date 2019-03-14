@@ -21,7 +21,6 @@ from os.path import dirname, join, pardir
 import memote
 import pytest
 from cobra.io import read_sbml_model
-
 from jsonschema import Draft4Validator
 
 
