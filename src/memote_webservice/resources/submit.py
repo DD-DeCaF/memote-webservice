@@ -15,6 +15,7 @@
 
 """Provide a resource to submit models for testing."""
 
+import logging
 import tempfile
 from bz2 import BZ2File
 from gzip import GzipFile
@@ -23,7 +24,6 @@ from itertools import chain
 from uuid import uuid4
 
 import memote
-import structlog
 import werkzeug
 from cobra.io import load_json_model
 from cobra.io.sbml import CobraSBMLError
@@ -37,7 +37,7 @@ from memote_webservice.tasks import model_snapshot
 
 __all__ = ("Submit",)
 
-LOGGER = structlog.get_logger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Submit(MethodResource):
