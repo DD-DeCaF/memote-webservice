@@ -29,4 +29,5 @@ def model_snapshot(model):
     _, result = memote.test_model(model, results=True,
                                   pytest_args=["-vv", "--tb", "long"])
     config = memote.ReportConfiguration.load()
-    return memote.SnapshotReport(result=result, configuration=config)
+    report = memote.SnapshotReport(result=result, configuration=config)
+    return model, report

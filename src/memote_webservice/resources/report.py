@@ -48,7 +48,15 @@ class Report(MethodResource):
                 'message': str(exception),
             })
         else:
-            report = result.get()
+            try:
+                _, report = result.get()
+            except TypeError:
+                # Expected for results generated before the result type changed.
+                # When those results expire (about 2 weeks from 2019-03-27
+                # assuming this commit is deployed today), this handler can be
+                # removed.
+                report = result.get()
+
             mime_type = request.accept_mimetypes.best_match([
                 'text/html',
                 'application/json',
