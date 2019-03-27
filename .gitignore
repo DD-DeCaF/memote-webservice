@@ -1,3 +1,7 @@
+# Ignore uploaded model files (excluding the README)
+/models/*
+!/models/README
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

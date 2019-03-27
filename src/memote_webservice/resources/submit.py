@@ -59,8 +59,20 @@ class Submit(MethodResource):
     @marshal_with(None, code=400)
     @marshal_with(None, code=415)
     def post(self, model):
+        # Save the uploaded models on the local filesystem, for easier debugging
+        # of any potential issues with testing the model.
+        filename = werkzeug.secure_filename(model.filename)
+        path = f"models/{str(uuid4())}_{filename}"
+        LOGGER.info(f"Dumping uploaded model to: {path}")
+        with open(path, "wb") as file_:
+            file_.write(model.read())
+            model.stream.seek(0)
+
         model = self._load_model(model)
         job_id = self._submit(model)
+
+        # Show which submitted job id relates to which model file.
+        LOGGER.info(f"Job ID {job_id} was queued from model file: {path}")
         return {"uuid": job_id}, 202
 
     def _submit(self, model):
@@ -92,7 +104,6 @@ class Submit(MethodResource):
                         file_.name,
                     )
                 if model is None:
-                    self._dump_model(filename, content)
                     LOGGER.info("SBML validation failure")
                     raise SBMLValidationError(
                         code=400,
@@ -110,13 +121,7 @@ class Submit(MethodResource):
         except (CobraSBMLError, ValueError) as err:
             msg = f"Failed to parse model: {str(err)}"
             LOGGER.exception(msg)
-            self._dump_model(filename, content)
             abort(400, msg)
-        except Exception:
-            # Unexpected exception. Don't handle it here, but do dump the
-            # submitted model for debugging before re-raising.
-            self._dump_model(filename, content)
-            raise
         finally:
             content.close()
             file_storage.close()
@@ -137,10 +142,3 @@ class Submit(MethodResource):
         else:
             content = BytesIO(content.read())
         return filename, content
-
-    @staticmethod
-    def _dump_model(filename, content):
-        unique_filename = f"{str(uuid4())}_{werkzeug.secure_filename(filename)}"
-        LOGGER.warning(f"Dumping uploaded model to '{unique_filename}'")
-        with open(unique_filename, 'wb') as file_:
-            file_.write(content.getvalue())
