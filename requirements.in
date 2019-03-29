@@ -4,8 +4,6 @@ flask-apispec
 gunicorn
 gevent
 raven[flask]
-structlog
-python-json-logger
 webargs
 werkzeug
 celery[redis]

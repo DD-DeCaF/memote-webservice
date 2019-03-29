@@ -59,7 +59,10 @@ class Default:
             'disable_existing_loggers': False,
             'formatters': {
                 'simple': {
-                    'format': "%(message)s",
+                    'format': (
+                        "%(asctime)s [%(levelname)s] [%(name)s] %(filename)s:%("
+                        "funcName)s:%(lineno)d | %(message)s"
+                    )
                 },
             },
             'handlers': {

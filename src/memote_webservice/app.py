@@ -19,17 +19,15 @@ import logging
 import logging.config
 import os
 
-import structlog
 from flask import Flask
 from flask_cors import CORS
-from pythonjsonlogger import jsonlogger
 from raven.contrib.flask import Sentry
 from werkzeug.contrib.fixers import ProxyFix
 
 from . import errorhandlers
 
 
-LOGGER = structlog.get_logger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 app = Flask(__name__)
 
@@ -48,27 +46,6 @@ def init_app(application):
 
     # Configure logging
     logging.config.dictConfig(application.config["LOGGING"])
-    root_logger = logging.getLogger()
-    for handler in root_logger.handlers:
-        handler.setFormatter(jsonlogger.JsonFormatter())
-    structlog.configure(
-        processors=[
-            structlog.stdlib.filter_by_level,
-            structlog.stdlib.add_logger_name,
-            structlog.stdlib.add_log_level,
-            structlog.processors.TimeStamper(fmt="iso"),
-            structlog.stdlib.PositionalArgumentsFormatter(),
-            structlog.processors.StackInfoRenderer(),
-            structlog.processors.format_exc_info,
-            structlog.processors.UnicodeDecoder(),
-            structlog.stdlib.render_to_log_kwargs,
-        ],
-        # comment
-        context_class=dict,
-        logger_factory=structlog.stdlib.LoggerFactory(),
-        wrapper_class=structlog.stdlib.BoundLogger,
-        cache_logger_on_first_use=True,
-    )
 
     # Configure Sentry
     if application.config["SENTRY_DSN"]:

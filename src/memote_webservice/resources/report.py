@@ -15,7 +15,8 @@
 
 """Provide a resource for retrieving test results."""
 
-import structlog
+import logging
+
 from celery.result import AsyncResult
 from flask import jsonify, make_response, render_template, request
 from flask_apispec import MethodResource, doc, marshal_with
@@ -25,7 +26,7 @@ from memote_webservice.celery import celery_app
 
 __all__ = ("Report",)
 
-LOGGER = structlog.get_logger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 class Report(MethodResource):
