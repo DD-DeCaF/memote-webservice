@@ -31,6 +31,10 @@ celery_app.conf.update(
     task_time_limit=7200,  # 2 hours
     # Time after which a successful result will be removed.
     result_expires=604800,  # 7 days
+    # Always restart workers after finishing. This aims to circumvent cache
+    # issues with successive memote runs.
+    # See: https://github.com/DD-DeCaF/scrum/issues/875
+    worker_max_tasks_per_child=1,
     task_serializer='pickle',
     result_serializer='pickle',
     accept_content=['pickle'],
