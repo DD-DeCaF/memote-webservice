@@ -26,7 +26,7 @@ from uuid import uuid4
 import memote
 import werkzeug
 from cobra.io import load_json_model
-from cobra.io.sbml3 import CobraSBMLError
+from cobra.io.sbml import CobraSBMLError
 from flask import abort
 from flask_apispec import MethodResource, doc, marshal_with, use_kwargs
 

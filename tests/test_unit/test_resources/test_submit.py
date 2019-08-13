@@ -18,7 +18,7 @@
 from os.path import dirname, join
 
 import pytest
-# from cobra.io.sbml3 import CobraSBMLError
+# from cobra.io.sbml import CobraSBMLError
 from werkzeug.datastructures import FileStorage
 
 from memote_webservice.resources.submit import Submit
