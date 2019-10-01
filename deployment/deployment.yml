@@ -98,7 +98,7 @@ spec:
             cpu: "10m"
           limits:
             cpu: "2000m"
-            memory: "512Mi"
+            memory: "8Gi"
         volumeMounts:
           - mountPath: "/data"
             name: memote-webservice-production
