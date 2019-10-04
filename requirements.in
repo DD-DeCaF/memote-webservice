@@ -13,4 +13,3 @@ flower
 # version, so pin it explicitly here.
 tornado<6
 memote>=0.9.11
-pytest<4.1
