@@ -15,6 +15,7 @@
 
 """Provide settings for different deployment scenarios."""
 
+import logging
 import os
 
 import werkzeug.exceptions
@@ -54,9 +55,21 @@ class Default:
                 werkzeug.exceptions.MethodNotAllowed,
             ]
         }
+
+        # Add a specific log filter to exclude a log statement by cobrapy which
+        # seems to repeat for all/most metabolites when loading certain models:
+        # 'Foo' is not a valid SBML 'SId'.
+        class CobraFilter(logging.Filter):
+            def filter(self, record):
+                return "is not a valid SBML 'SId'" not in record.msg
         self.LOGGING = {
             'version': 1,
             'disable_existing_loggers': False,
+            'filters': {
+                'cobrapy': {
+                    '()': CobraFilter,
+                }
+            },
             'formatters': {
                 'simple': {
                     'format': (
@@ -79,6 +92,12 @@ class Default:
                 'pip': {
                     'level': 'INFO',
                 },
+                'cobra.io.sbml': {
+                    'level': 'DEBUG',
+                    'handlers': ['console'],
+                    'propagate': True,
+                    'filters': ['cobrapy'],
+                }
             },
             'root': {
                 'level': 'DEBUG',
