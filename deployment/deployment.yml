@@ -46,7 +46,7 @@ spec:
         command: ["gunicorn", "-c", "gunicorn.py", "memote_webservice.wsgi:app"]
         resources:
           requests:
-            cpu: "10m"
+            cpu: "1m"
           limits:
             cpu: "2000m"
             memory: "1Gi"
@@ -62,7 +62,7 @@ spec:
         command: ["celery", "-A", "memote_webservice.tasks", "worker", "--loglevel=info"]
         resources:
           requests:
-            cpu: "10m"
+            cpu: "1m"
           limits:
             cpu: "4000m"
             memory: "6Gi"
@@ -87,7 +87,7 @@ spec:
         command: ["celery", "flower", "-A", "memote_webservice", "--broker=redis://localhost:6379/0", "--basic_auth=$(FLOWER_USERNAME):$(FLOWER_PASSWORD)"]
         resources:
           requests:
-            cpu: "10m"
+            cpu: "1m"
           limits:
             cpu: "2000m"
             memory: "128Mi"
@@ -95,7 +95,7 @@ spec:
         image: redis:4.0-alpine
         resources:
           requests:
-            cpu: "10m"
+            cpu: "1m"
           limits:
             cpu: "2000m"
             memory: "8Gi"
