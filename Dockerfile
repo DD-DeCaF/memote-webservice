@@ -21,7 +21,7 @@ RUN groupadd --system --gid "${GID}" "${APP_USER}" \
 
 WORKDIR "${CWD}"
 
-COPY requirements.in dev-requirements.in "${CWD}/"
+COPY requirements.txt "${CWD}/"
 
 # `g++` is required for building `gevent` but all build dependencies are
 # later removed again.
@@ -32,7 +32,7 @@ RUN set -eux \
     && apt-get install --yes --no-install-recommends \
         g++ libssl-dev \
     && pip install --upgrade pip==9.0.3 setuptools wheel \
-    && pip install -r requirements.in -r dev-requirements.in \
+    && pip install -r requirements.txt \
     && rm -rf /root/.cache/pip \
     && apt-get purge --yes g++ \
     && apt-get autoremove --yes \

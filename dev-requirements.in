@@ -1,8 +1,0 @@
-pytest
-pytest-cov
-pytest-mock
-flake8
-flake8-docstrings
-isort
-colorama
-safety
