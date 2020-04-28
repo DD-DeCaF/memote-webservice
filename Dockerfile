@@ -26,12 +26,11 @@ COPY requirements.txt "${CWD}/"
 # `g++` is required for building `gevent` but all build dependencies are
 # later removed again.
 RUN set -eux \
-    && ln -sf /usr/local/bin/python /bin/python \
     && apt-get update \
     && apt-get install --yes --only-upgrade openssl ca-certificates \
     && apt-get install --yes --no-install-recommends \
         g++ libssl-dev \
-    && pip install --upgrade pip==9.0.3 setuptools wheel \
+    && pip install --upgrade pip setuptools wheel \
     && pip install -r requirements.txt \
     && rm -rf /root/.cache/pip \
     && apt-get purge --yes g++ \
