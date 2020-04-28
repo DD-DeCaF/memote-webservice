@@ -27,7 +27,8 @@ def model_snapshot(model):
     configuration = cobra.Configuration()
     configuration.processes = 1
     _, result = memote.test_model(model, results=True,
-                                  pytest_args=["-vv", "--tb", "long"])
+                                  pytest_args=["-vv", "--tb", "long"],
+                                  solver_timeout=20)
     config = memote.ReportConfiguration.load()
     report = memote.SnapshotReport(result=result, configuration=config)
     return model, report
