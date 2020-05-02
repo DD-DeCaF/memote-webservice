@@ -24,11 +24,11 @@ from itertools import chain
 from uuid import uuid4
 
 import memote
-import werkzeug
 from cobra.io import load_json_model
 from cobra.io.sbml import CobraSBMLError
 from flask import abort
 from flask_apispec import MethodResource, doc, marshal_with, use_kwargs
+from werkzeug.utils import secure_filename
 
 from memote_webservice.exceptions import SBMLValidationError
 from memote_webservice.schemas import SubmitRequest, SubmitResponse
@@ -61,7 +61,7 @@ class Submit(MethodResource):
     def post(self, model):
         # Save the uploaded models on the local filesystem, for easier debugging
         # of any potential issues with testing the model.
-        filename = werkzeug.secure_filename(model.filename)
+        filename = secure_filename(model.filename)
         path = f"models/{str(uuid4())}_{filename}"
         LOGGER.info(f"Dumping uploaded model to: {path}")
         with open(path, "wb") as file_:
