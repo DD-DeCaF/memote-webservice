@@ -29,11 +29,11 @@ RUN set -eux \
     && apt-get update \
     && apt-get install --yes --only-upgrade openssl ca-certificates \
     && apt-get install --yes --no-install-recommends \
-        g++ libssl-dev \
+        build-essential libssl-dev \
     && pip install --upgrade pip setuptools wheel \
     && pip install -r requirements.txt \
     && rm -rf /root/.cache/pip \
-    && apt-get purge --yes g++ \
+    && apt-get purge --yes build-essential \
     && apt-get autoremove --yes \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
