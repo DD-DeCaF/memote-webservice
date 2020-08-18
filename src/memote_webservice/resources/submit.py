@@ -68,11 +68,13 @@ class Submit(MethodResource):
             file_.write(model.read())
             model.stream.seek(0)
 
+        LOGGER.info(f"Loading Model from file {path}.")
         model = self._load_model(model)
-        job_id = self._submit(model)
 
-        # Show which submitted job id relates to which model file.
+        LOGGER.info("Submitting model to job queue.")
+        job_id = self._submit(model)
         LOGGER.info(f"Job ID {job_id} was queued from model file: {path}")
+
         return {"uuid": job_id}, 202
 
     def _submit(self, model):
